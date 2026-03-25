@@ -15,13 +15,10 @@ export default function KakaoMap({
   lng,
   mapUrl,
   primaryColor = '#2d2d2d',
-  secondaryColor = '#888888',
 }: Props) {
   const appKey = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY
-
   const encodedName = encodeURIComponent(venueName)
 
-  // 지도 이미지 (카카오 Static Map)
   const staticMapUrl = appKey
     ? `https://dapi.kakao.com/v2/maps/staticmap?center=${lng},${lat}&level=4&size=480x200&markers=color:red|${lng},${lat}&appkey=${appKey}`
     : null
@@ -35,26 +32,21 @@ export default function KakaoMap({
     <div className="w-full">
       {/* 지도 이미지 */}
       <div className="w-full overflow-hidden rounded-sm">
-        {staticMapUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <a href={mapUrl ?? kakaoNavUrl} target="_blank" rel="noopener noreferrer">
+        <a href={mapUrl ?? kakaoNavUrl} target="_blank" rel="noopener noreferrer">
+          {staticMapUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={staticMapUrl}
               alt={`${venueName} 지도`}
               className="w-full h-44 object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
-          </a>
-        ) : (
-          <a
-            href={mapUrl ?? kakaoNavUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center w-full h-24 text-sm"
-            style={{ backgroundColor: '#f5f5f5', color: secondaryColor }}
-          >
-            📍 지도 보기
-          </a>
-        )}
+          ) : (
+            <div className="flex items-center justify-center w-full h-24 bg-gray-100 text-sm text-gray-400">
+              📍 지도 보기
+            </div>
+          )}
+        </a>
       </div>
 
       {/* 교통편 버튼 */}

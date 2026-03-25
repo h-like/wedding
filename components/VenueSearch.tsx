@@ -23,7 +23,6 @@ export default function VenueSearch({ value, onChange }: Props) {
   const [open, setOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const mapAppKey = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY
 
   const search = useCallback(async (q: string) => {
     if (q.trim().length < 1) { setResults([]); setOpen(false); return }
@@ -73,6 +72,7 @@ export default function VenueSearch({ value, onChange }: Props) {
     setQuery('')
   }
 
+  const mapAppKey = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY
   const staticMapUrl = value && mapAppKey
     ? `https://dapi.kakao.com/v2/maps/staticmap?center=${value.venue_lng},${value.venue_lat}&level=4&size=480x160&markers=color:red|${value.venue_lng},${value.venue_lat}&appkey=${mapAppKey}`
     : null
@@ -89,11 +89,10 @@ export default function VenueSearch({ value, onChange }: Props) {
               src={staticMapUrl}
               alt="지도 미리보기"
               className="w-full h-36 object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
           ) : (
-            <div className="w-full h-24 bg-gray-100 flex items-center justify-center text-xs text-gray-400">
-              지도 미리보기를 보려면 NEXT_PUBLIC_KAKAO_MAP_APP_KEY를 설정하세요
-            </div>
+            <div className="w-full h-24 bg-gray-50" />
           )}
 
           {/* 장소 정보 */}
